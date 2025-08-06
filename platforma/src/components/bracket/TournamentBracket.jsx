@@ -87,7 +87,7 @@ function Match({
 }) {
   const styles = useStyles();
   const { theme } = useFluent();
-  const isDark = theme.colorNeutralForeground1 === '#ffffff';
+  const isDark = theme?.colorNeutralForeground1 === '#ffffff';
   const connectorColor = isDark ? '#fff' : '#000';
   const winnerIndex =
     sides[0].score === undefined
@@ -159,7 +159,7 @@ function Match({
   );
 }
 
-export default function TournamentBracket({ rounds }) {
+export default function TournamentBracket({ rounds = [] }) {
   const styles = useStyles();
   const matchSpacing = 72; // match height + gap
   return (
