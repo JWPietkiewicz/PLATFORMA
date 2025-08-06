@@ -19,8 +19,8 @@ const useStyles = makeStyles({
     flexDirection: 'column',
   },
   match: {
-    width: '160px',
-    height: '48px',
+    minWidth: '200px',
+    height: '64px',
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -33,7 +33,12 @@ const useStyles = makeStyles({
     justifyContent: 'space-between',
     alignItems: 'center',
     columnGap: '4px',
-    ...shorthands.padding('4px', '0'),
+    ...shorthands.padding('8px', '0'),
+    selectors: {
+      '&:not(:last-child)': {
+        borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
+      },
+    },
   },
   score: {
     display: 'flex',
@@ -58,6 +63,7 @@ const useStyles = makeStyles({
     right: '-24px',
     width: '24px',
     height: '2px',
+    transform: 'translateY(-50%)',
   },
   lineLeft: {
     position: 'absolute',
@@ -65,6 +71,7 @@ const useStyles = makeStyles({
     left: '-24px',
     width: '24px',
     height: '2px',
+    transform: 'translateY(-50%)',
   },
   lineVerticalRight: {
     position: 'absolute',
@@ -151,7 +158,7 @@ function Match({
         <div
           className={styles.lineVerticalLeft}
           style={{
-            top: 24 - prevConnectorHeight / 2,
+            top: `calc(50% - ${prevConnectorHeight / 2}px)`,
             height: prevConnectorHeight,
             backgroundColor: connectorColor,
           }}
@@ -163,7 +170,8 @@ function Match({
 
 export default function TournamentBracket({ rounds = [] }) {
   const styles = useStyles();
-  const matchSpacing = 72; // match height + gap
+  const matchHeight = 64;
+  const matchSpacing = matchHeight + 24; // match height + gap
   const thirdPlaceRound = rounds.find((r) => r.name === 'Third Place');
   const displayRounds = rounds.filter((r) => r.name !== 'Third Place');
   return (
@@ -175,8 +183,8 @@ export default function TournamentBracket({ rounds = [] }) {
             <Text weight="semibold">{round.name}</Text>
             {round.matches.map((match, mIndex) => {
               const spacing = matchSpacing * Math.pow(2, rIndex);
-              const offset = rIndex === 0 ? 0 : spacing / 2 - 24;
-              const marginTop = mIndex === 0 ? offset : spacing - 48;
+              const offset = rIndex === 0 ? 0 : spacing / 2 - matchHeight / 2;
+              const marginTop = mIndex === 0 ? offset : spacing - matchHeight;
               const hasPrev = rIndex > 0;
               const hasNext = rIndex < displayRounds.length - 1;
               const prevSpacing = matchSpacing * Math.pow(2, rIndex - 1);
@@ -200,7 +208,7 @@ export default function TournamentBracket({ rounds = [] }) {
                   {thirdPlaceRound.name}
                 </Text>
                 {thirdPlaceRound.matches.map((match, mIndex) => {
-                  const marginTop = mIndex === 0 ? 0 : matchSpacing - 48;
+                  const marginTop = mIndex === 0 ? 0 : matchSpacing - matchHeight;
                   return (
                     <Match
                       key={match.id}
