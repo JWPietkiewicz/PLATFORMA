@@ -25,7 +25,6 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    ...shorthands.padding('8px'),
     overflow: 'visible',
   },
   team: {
@@ -33,10 +32,9 @@ const useStyles = makeStyles({
     justifyContent: 'space-between',
     alignItems: 'center',
     columnGap: '4px',
-    ...shorthands.padding('8px', '0'),
     selectors: {
       '&:not(:last-child)': {
-        borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
+        borderBottom: `2px solid ${tokens.colorNeutralStroke3}`,
       },
     },
   },
@@ -60,28 +58,28 @@ const useStyles = makeStyles({
   lineRight: {
     position: 'absolute',
     top: '50%',
-    right: '-24px',
-    width: '24px',
+    right: '-16px',
+    width: '16px',
     height: '2px',
     transform: 'translateY(-50%)',
   },
   lineLeft: {
     position: 'absolute',
     top: '50%',
-    left: '-24px',
-    width: '24px',
+    left: '-16px',
+    width: '16px',
     height: '2px',
     transform: 'translateY(-50%)',
   },
   lineVerticalRight: {
     position: 'absolute',
-    right: '-24px',
+    right: '-16px',
     width: '2px',
   },
   lineVerticalLeft: {
     position: 'absolute',
-    left: '-24px',
-    width: '2px',
+    left: '-16px',
+    width: '0',
   },
 });
 
@@ -96,8 +94,7 @@ function Match({
 }) {
   const styles = useStyles();
   const { theme } = useFluent();
-  const isDark = theme?.colorNeutralForeground1 === '#ffffff';
-  const connectorColor = isDark ? '#fff' : '#000';
+  const connectorColor = tokens.colorNeutralForeground3Hover; //isDark ? '#fff' : '#000';
   const winnerIndex =
     sides[0].score === undefined
       ? 1
@@ -115,11 +112,11 @@ function Match({
             key={i}
             className={styles.team}
           >
-            <Text weight={isWinner ? 'semibold' : 'regular'}>{side.team}</Text>
+            <Text weight={isWinner ? 'bold' : 'regular'}>{side.team}</Text>
             <div className={styles.score}>
               {side.score !== undefined && (
                 <Text
-                  weight={isWinner ? 'semibold' : 'regular'}
+                  weight={isWinner ? 'bold' : 'regular'}
                   className={mergeClasses(
                     styles.scoreValue,
                     isWinner ? styles.winScore : styles.loseScore,
