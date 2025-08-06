@@ -1,4 +1,5 @@
-import { Stack, Image, Text } from '@fluentui/react';
+import { Stack, Image } from '@fluentui/react';
+import { Text } from '@fluentui/react-components';
 
 export default function Venue({ name, image, address, description, location }) {
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(location || address)}&output=embed`;
@@ -9,9 +10,11 @@ export default function Venue({ name, image, address, description, location }) {
         <Image src={image} alt={name} styles={{ root: { width: '100%', height: 'auto' } }} />
       )}
       <Stack tokens={{ childrenGap: 8 }}>
-        <Text variant="xxLarge">{name}</Text>
-        <Text>{address}</Text>
-        <Text>{description}</Text>
+        <Text variant="xxLarge" style={{ color: 'var(--colorNeutralForeground1)' }}>
+          {name}
+        </Text>
+        <Text style={{ color: 'var(--colorNeutralForeground1)' }}>{address}</Text>
+        <Text style={{ color: 'var(--colorNeutralForeground1)' }}>{description}</Text>
       </Stack>
       <iframe
         title={`${name} location`}
