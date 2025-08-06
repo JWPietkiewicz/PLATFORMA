@@ -1,4 +1,5 @@
-import { CommandBar, Toggle } from '@fluentui/react';
+import { CommandBar } from '@fluentui/react';
+import { Switch } from '@fluentui/react-components';
 
 const navItems = [
   { key: 'home', text: 'Home', href: '#' },
@@ -17,11 +18,10 @@ export default function Navbar({ isDark, setIsDark }) {
     {
       key: 'themeToggle',
       onRender: () => (
-        <Toggle
-          inlineLabel
-          label="Dark mode"
+        <Switch
           checked={isDark}
-          onChange={(_, checked) => setIsDark(!!checked)}
+          label="Dark mode"
+          onChange={(_, data) => setIsDark(!!data.checked)}
         />
       ),
     },
