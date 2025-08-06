@@ -5,7 +5,7 @@ export default function Footer() {
     <div
       style={{
         padding: 20,
-        background: 'var(--colorNeutralBackground1)',
+        background: 'var(--colorNeutralForeground2BrandHover)',
         marginTop: 'auto',
         display: 'flex',
         alignItems: 'center',
