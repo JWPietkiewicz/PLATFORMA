@@ -4,8 +4,8 @@ import {
   makeStyles,
   shorthands,
   tokens,
+  mergeClasses,
 } from '@fluentui/react-components';
-import { CheckmarkCircle20Regular } from '@fluentui/react-icons';
 
 const useStyles = makeStyles({
   bracket: {
@@ -32,6 +32,10 @@ const useStyles = makeStyles({
     alignItems: 'center',
     columnGap: '4px',
   },
+  winnerTeam: {
+    ...shorthands.border('2px', 'solid', tokens.colorStatusSuccessForeground1),
+    ...shorthands.borderRadius(tokens.borderRadiusMedium),
+  },
   score: {
     display: 'flex',
     alignItems: 'center',
@@ -53,9 +57,15 @@ const useStyles = makeStyles({
     height: '2px',
     backgroundColor: tokens.colorNeutralStroke1,
   },
-  lineVertical: {
+  lineVerticalRight: {
     position: 'absolute',
     right: '-24px',
+    width: '2px',
+    backgroundColor: tokens.colorNeutralStroke1,
+  },
+  lineVerticalLeft: {
+    position: 'absolute',
+    left: '-24px',
     width: '2px',
     backgroundColor: tokens.colorNeutralStroke1,
   },
@@ -66,7 +76,8 @@ function Match({
   hasPrev,
   hasNext,
   index,
-  connectorHeight,
+  prevConnectorHeight,
+  nextConnectorHeight,
   style,
 }) {
   const styles = useStyles();
@@ -74,27 +85,36 @@ function Match({
   const winnerIndex = scores[0] >= scores[1] ? 0 : 1;
   return (
     <Card className={styles.match} appearance="filled" style={style}>
-      {sides.map((side, i) => (
-        <div key={i} className={styles.team}>
-          <Text weight={winnerIndex === i ? 'semibold' : 'regular'}>{side.team}</Text>
-          <div className={styles.score}>
-            {side.score !== undefined && (
-              <Text weight={winnerIndex === i ? 'semibold' : 'regular'}>
-                {side.score}
-              </Text>
-            )}
-            {winnerIndex === i && (
-              <CheckmarkCircle20Regular color={tokens.colorStatusSuccessForeground1} />
-            )}
+      {sides.map((side, i) => {
+        const isWinner = winnerIndex === i;
+        return (
+          <div
+            key={i}
+            className={mergeClasses(styles.team, isWinner && styles.winnerTeam)}
+          >
+            <Text weight={isWinner ? 'semibold' : 'regular'}>{side.team}</Text>
+            <div className={styles.score}>
+              {side.score !== undefined && (
+                <Text weight={isWinner ? 'semibold' : 'regular'}>
+                  {side.score}
+                </Text>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       {hasNext && <div className={styles.lineRight} />}
       {hasPrev && <div className={styles.lineLeft} />}
       {hasNext && index % 2 === 0 && (
         <div
-          className={styles.lineVertical}
-          style={{ top: '50%', height: connectorHeight }}
+          className={styles.lineVerticalRight}
+          style={{ top: '50%', height: nextConnectorHeight }}
+        />
+      )}
+      {hasPrev && (
+        <div
+          className={styles.lineVerticalLeft}
+          style={{ top: 24 - prevConnectorHeight / 2, height: prevConnectorHeight }}
         />
       )}
     </Card>
@@ -123,6 +143,8 @@ export default function TournamentBracket({ rounds }) {
               const hasPrev = !isThirdPlace && rIndex > 0;
               const nextIsThird = rounds[rIndex + 1]?.name === 'Third Place';
               const hasNext = !isThirdPlace && !nextIsThird && rIndex < rounds.length - 1;
+              const prevSpacing = matchSpacing * Math.pow(2, rIndex - 1);
+              const nextSpacing = spacing;
               return (
                 <Match
                   key={match.id}
@@ -130,7 +152,8 @@ export default function TournamentBracket({ rounds }) {
                   hasPrev={hasPrev}
                   hasNext={hasNext}
                   index={mIndex}
-                  connectorHeight={spacing}
+                  prevConnectorHeight={prevSpacing}
+                  nextConnectorHeight={nextSpacing}
                   style={{ marginTop }}
                 />
               );
