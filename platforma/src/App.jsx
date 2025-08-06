@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import { useState, useEffect } from 'react';
+import { initializeIcons } from '@fluentui/react';
+import { PrimaryButton, TextField, Stack } from '@fluentui/react';
+import { db } from './firebase';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
+
+initializeIcons();
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [text, setText] = useState('');
+  const [items, setItems] = useState([]);
+
+  const handleSubmit = async () => {
+    if (text.trim()) {
+      await addDoc(collection(db, "items"), { text });
+      setText('');
+      fetchItems();
+    }
+  };
+
+  const fetchItems = async () => {
+    const querySnapshot = await getDocs(collection(db, "items"));
+    const data = querySnapshot.docs.map(doc => doc.data().text);
+    setItems(data);
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Stack tokens={{ childrenGap: 10 }} style={{ padding: 20 }}>
+      <TextField
+        label="Enter text"
+        value={text}
+        onChange={(e, newValue) => setText(newValue)}
+      />
+      <PrimaryButton text="Submit" onClick={handleSubmit} />
+      
+      <ul>
+        {items.map((item, index) => (<li key={index}>{item}</li>))}
+      </ul>
+    </Stack>
+  );
 }
 
-export default App
+export default App;
