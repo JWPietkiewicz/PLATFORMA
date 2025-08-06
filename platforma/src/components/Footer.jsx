@@ -1,18 +1,16 @@
-import { Stack, Text } from '@fluentui/react';
+import { Text } from '@fluentui/react-components';
 
 export default function Footer() {
   return (
-    <Stack
-      horizontal
-      horizontalAlign="center"
-      verticalAlign="center"
-      tokens={{ childrenGap: 10 }}
-      styles={{
-        root: {
-          padding: 20,
-          background: '#f3f2f1',
-          marginTop: 'auto',
-        },
+    <div
+      style={{
+        padding: 20,
+        background: 'var(--colorNeutralBackground1)',
+        marginTop: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
       }}
     >
       <img
@@ -20,8 +18,10 @@ export default function Footer() {
         alt="3LK logo"
         style={{ height: 40 }}
       />
-      <Text variant="small">© 2023 Amateur Basketball League</Text>
-    </Stack>
+      <Text style={{ color: 'var(--colorNeutralForeground1)' }} size={200}>
+        © 2023 Amateur Basketball League
+      </Text>
+    </div>
   );
 }
 
