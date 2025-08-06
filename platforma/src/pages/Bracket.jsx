@@ -1,50 +1,74 @@
-import { FluentProvider, Text, webDarkTheme, webLightTheme } from '@fluentui/react-components';
+import { Text } from '@fluentui/react-components';
 import TournamentBracket from '../components/bracket/TournamentBracket';
 
-const lightExample = {
-  rounds: [
-    {
-      name: 'Semifinals',
-      matches: [
-        { id: 1, sides: [{ team: 'Lions', score: 80 }, { team: 'Tigers', score: 75 }] },
-        { id: 2, sides: [{ team: 'Bears', score: 68 }, { team: 'Hawks', score: 70 }] },
-      ],
-    },
-    {
-      name: 'Final',
-      matches: [
-        { id: 3, sides: [{ team: 'Lions', score: 88 }, { team: 'Hawks', score: 90 }] },
-      ],
-    },
-  ],
-};
+function roundName(size) {
+  if (size === 2) return 'Final';
+  if (size === 4) return 'Semifinals';
+  if (size === 8) return 'Quarterfinals';
+  return `Round of ${size}`;
+}
 
-const darkExample = {
-  rounds: [
-    {
-      name: 'Quarterfinals',
+function generateBracket(teamCount) {
+  const totalSlots = 2 ** Math.ceil(Math.log2(teamCount));
+  const seeded = Array.from({ length: totalSlots }, (_, i) =>
+    i < teamCount ? `Team ${i + 1}` : 'BYE',
+  );
+  const firstHalf = seeded.slice(0, totalSlots / 2);
+  const secondHalf = seeded.slice(totalSlots / 2);
+  const teams = [];
+  for (let i = 0; i < firstHalf.length; i++) {
+    teams.push(firstHalf[i], secondHalf[i]);
+  }
+  const rounds = [];
+  let current = teams;
+  let semifinalLosers = [];
+  let id = 1;
+  while (current.length > 1) {
+    const matches = [];
+    const next = [];
+    const losers = [];
+    for (let i = 0; i < current.length; i += 2) {
+      const t1 = current[i];
+      const t2 = current[i + 1];
+      const winner = t1 === 'BYE' ? t2 : t1;
+      const loser = t1 === 'BYE' ? t1 : t2;
+      matches.push({
+        id: id++,
+        sides: [
+          { team: t1, score: t1 === 'BYE' ? undefined : 1 },
+          { team: t2, score: t2 === 'BYE' ? undefined : 0 },
+        ],
+      });
+      next.push(winner);
+      losers.push(loser);
+    }
+    rounds.push({ name: roundName(current.length), matches });
+    if (current.length === 4) {
+      semifinalLosers = losers;
+    }
+    current = next;
+  }
+  if (semifinalLosers.length === 2) {
+    rounds.push({
+      name: 'Third Place',
       matches: [
-        { id: 1, sides: [{ team: 'Alpha', score: 1 }, { team: 'Bravo', score: 0 }] },
-        { id: 2, sides: [{ team: 'Charlie', score: 1 }, { team: 'Delta', score: 0 }] },
-        { id: 3, sides: [{ team: 'Echo', score: 1 }, { team: 'Foxtrot', score: 0 }] },
-        { id: 4, sides: [{ team: 'Golf', score: 1 }, { team: 'Hotel', score: 0 }] },
+        {
+          id: id++,
+          sides: [
+            { team: semifinalLosers[0], score: 1 },
+            { team: semifinalLosers[1], score: 0 },
+          ],
+        },
       ],
-    },
-    {
-      name: 'Semifinals',
-      matches: [
-        { id: 5, sides: [{ team: 'Alpha', score: 1 }, { team: 'Charlie', score: 0 }] },
-        { id: 6, sides: [{ team: 'Echo', score: 1 }, { team: 'Golf', score: 0 }] },
-      ],
-    },
-    {
-      name: 'Final',
-      matches: [
-        { id: 7, sides: [{ team: 'Alpha', score: 1 }, { team: 'Echo', score: 0 }] },
-      ],
-    },
-  ],
-};
+    });
+  }
+  return rounds;
+}
+
+const examples = [32, 24, 16, 12, 8, 4].map((count) => ({
+  count,
+  rounds: generateBracket(count),
+}));
 
 export default function Bracket() {
   return (
@@ -52,20 +76,14 @@ export default function Bracket() {
       <Text as="h1" size={800} block>
         Bracket
       </Text>
-
-      <Text as="h2" size={500} block>
-        Light theme
-      </Text>
-      <FluentProvider theme={webLightTheme} style={{ padding: 16 }}>
-        <TournamentBracket rounds={lightExample.rounds} />
-      </FluentProvider>
-
-      <Text as="h2" size={500} block style={{ marginTop: 32 }}>
-        Dark theme
-      </Text>
-      <FluentProvider theme={webDarkTheme} style={{ padding: 16 }}>
-        <TournamentBracket rounds={darkExample.rounds} />
-      </FluentProvider>
+      {examples.map((ex) => (
+        <div key={ex.count} style={{ marginTop: 32 }}>
+          <Text as="h2" size={500} block>
+            {ex.count} teams
+          </Text>
+          <TournamentBracket rounds={ex.rounds} />
+        </div>
+      ))}
     </div>
   );
 }
