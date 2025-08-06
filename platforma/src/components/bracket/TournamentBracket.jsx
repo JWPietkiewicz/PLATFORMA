@@ -19,19 +19,24 @@ const useStyles = makeStyles({
     flexDirection: 'column',
   },
   match: {
-    width: '160px',
-    height: '48px',
+    minWidth: '200px',
+    height: '64px',
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    ...shorthands.padding('8px'),
+    overflow: 'visible',
   },
   team: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     columnGap: '4px',
+    selectors: {
+      '&:not(:last-child)': {
+        borderBottom: `2px solid ${tokens.colorNeutralStroke3}`,
+      },
+    },
   },
   score: {
     display: 'flex',
@@ -39,40 +44,42 @@ const useStyles = makeStyles({
     columnGap: '4px',
   },
   scoreValue: {
-    ...shorthands.padding('0', '4px'),
+    ...shorthands.padding('2px', '4px'),
     ...shorthands.borderRadius(tokens.borderRadiusSmall),
   },
   winScore: {
-    backgroundColor: tokens.colorStatusSuccessBackground1,
+    backgroundColor: tokens.colorStatusSuccessBackground3,
     color: tokens.colorNeutralForegroundOnBrand,
   },
   loseScore: {
-    backgroundColor: tokens.colorStatusDangerBackground1,
+    backgroundColor: tokens.colorStatusDangerBackground3,
     color: tokens.colorNeutralForegroundOnBrand,
   },
   lineRight: {
     position: 'absolute',
     top: '50%',
-    right: '-24px',
-    width: '24px',
+    right: '-16px',
+    width: '16px',
     height: '2px',
+    transform: 'translateY(-50%)',
   },
   lineLeft: {
     position: 'absolute',
     top: '50%',
-    left: '-24px',
-    width: '24px',
+    left: '-16px',
+    width: '16px',
     height: '2px',
+    transform: 'translateY(-50%)',
   },
   lineVerticalRight: {
     position: 'absolute',
-    right: '-24px',
+    right: '-16px',
     width: '2px',
   },
   lineVerticalLeft: {
     position: 'absolute',
-    left: '-24px',
-    width: '2px',
+    left: '-16px',
+    width: '0',
   },
 });
 
@@ -87,10 +94,15 @@ function Match({
 }) {
   const styles = useStyles();
   const { theme } = useFluent();
-  const isDark = theme.colorNeutralForeground1 === '#ffffff';
-  const connectorColor = isDark ? '#fff' : '#000';
-  const scores = sides.map((s) => (s.score ?? 0));
-  const winnerIndex = scores[0] >= scores[1] ? 0 : 1;
+  const connectorColor = tokens.colorNeutralForeground3Hover; //isDark ? '#fff' : '#000';
+  const winnerIndex =
+    sides[0].score === undefined
+      ? 1
+      : sides[1].score === undefined
+        ? 0
+        : sides[0].score >= sides[1].score
+          ? 0
+          : 1;
   return (
     <Card className={styles.match} appearance="filled" style={style}>
       {sides.map((side, i) => {
@@ -100,11 +112,11 @@ function Match({
             key={i}
             className={styles.team}
           >
-            <Text weight={isWinner ? 'semibold' : 'regular'}>{side.team}</Text>
+            <Text weight={isWinner ? 'bold' : 'regular'}>{side.team}</Text>
             <div className={styles.score}>
               {side.score !== undefined && (
                 <Text
-                  weight={isWinner ? 'semibold' : 'regular'}
+                  weight={isWinner ? 'bold' : 'regular'}
                   className={mergeClasses(
                     styles.scoreValue,
                     isWinner ? styles.winScore : styles.loseScore,
@@ -143,7 +155,7 @@ function Match({
         <div
           className={styles.lineVerticalLeft}
           style={{
-            top: 24 - prevConnectorHeight / 2,
+            top: `calc(50% - ${prevConnectorHeight / 2}px)`,
             height: prevConnectorHeight,
             backgroundColor: connectorColor,
           }}
@@ -153,28 +165,25 @@ function Match({
   );
 }
 
-export default function TournamentBracket({ rounds }) {
+export default function TournamentBracket({ rounds = [] }) {
   const styles = useStyles();
-  const matchSpacing = 72; // match height + gap
+  const matchHeight = 64;
+  const matchSpacing = matchHeight + 24; // match height + gap
+  const thirdPlaceRound = rounds.find((r) => r.name === 'Third Place');
+  const displayRounds = rounds.filter((r) => r.name !== 'Third Place');
   return (
     <div className={styles.bracket}>
-      {rounds.map((round, rIndex) => {
-        const isThirdPlace = round.name === 'Third Place';
+      {displayRounds.map((round, rIndex) => {
+        const isFinal = round.name === 'Finals';
         return (
           <div key={rIndex} className={styles.round}>
             <Text weight="semibold">{round.name}</Text>
             {round.matches.map((match, mIndex) => {
               const spacing = matchSpacing * Math.pow(2, rIndex);
-              let marginTop;
-              if (isThirdPlace) {
-                marginTop = mIndex === 0 ? 0 : spacing - 48;
-              } else {
-                const offset = rIndex === 0 ? 0 : spacing / 2 - 24;
-                marginTop = mIndex === 0 ? offset : spacing - 48;
-              }
-              const hasPrev = !isThirdPlace && rIndex > 0;
-              const nextIsThird = rounds[rIndex + 1]?.name === 'Third Place';
-              const hasNext = !isThirdPlace && !nextIsThird && rIndex < rounds.length - 1;
+              const offset = rIndex === 0 ? 0 : spacing / 2 - matchHeight / 2;
+              const marginTop = mIndex === 0 ? offset : spacing - matchHeight;
+              const hasPrev = rIndex > 0;
+              const hasNext = rIndex < displayRounds.length - 1;
               const prevSpacing = matchSpacing * Math.pow(2, rIndex - 1);
               const nextSpacing = spacing;
               return (
@@ -190,6 +199,28 @@ export default function TournamentBracket({ rounds }) {
                 />
               );
             })}
+            {isFinal && thirdPlaceRound && (
+              <>
+                <Text weight="semibold" style={{ marginTop: matchSpacing }}>
+                  {thirdPlaceRound.name}
+                </Text>
+                {thirdPlaceRound.matches.map((match, mIndex) => {
+                  const marginTop = mIndex === 0 ? 0 : matchSpacing - matchHeight;
+                  return (
+                    <Match
+                      key={match.id}
+                      sides={match.sides}
+                      hasPrev={false}
+                      hasNext={false}
+                      index={mIndex}
+                      prevConnectorHeight={0}
+                      nextConnectorHeight={0}
+                      style={{ marginTop }}
+                    />
+                  );
+                })}
+              </>
+            )}
           </div>
         );
       })}
