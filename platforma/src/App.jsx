@@ -12,7 +12,7 @@ export default function App() {
 
   return (
     <FluentProvider theme={isDark ? webDarkTheme : webLightTheme}>
-      <Stack tokens={{ childrenGap: 20 }}>
+      <Stack tokens={{ childrenGap: 20 }} styles={{ root: { minHeight: '100vh' } }}>
         <Navbar isDark={isDark} setIsDark={setIsDark} />
         <ImageCarousel />
         <Footer />
