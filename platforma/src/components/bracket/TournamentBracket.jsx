@@ -89,8 +89,14 @@ function Match({
   const { theme } = useFluent();
   const isDark = theme.colorNeutralForeground1 === '#ffffff';
   const connectorColor = isDark ? '#fff' : '#000';
-  const scores = sides.map((s) => (s.score ?? 0));
-  const winnerIndex = scores[0] >= scores[1] ? 0 : 1;
+  const winnerIndex =
+    sides[0].score === undefined
+      ? 1
+      : sides[1].score === undefined
+        ? 0
+        : sides[0].score >= sides[1].score
+          ? 0
+          : 1;
   return (
     <Card className={styles.match} appearance="filled" style={style}>
       {sides.map((side, i) => {
