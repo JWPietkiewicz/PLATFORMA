@@ -1,5 +1,6 @@
 import { initializeIcons, Stack } from '@fluentui/react';
-import { FluentProvider, webLightTheme, webDarkTheme } from '@fluentui/react-components';
+import { FluentProvider } from '@fluentui/react-components';
+import { lightTheme, darkTheme } from './theme';
 import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -27,7 +28,7 @@ export default function App() {
   const [isDark, setIsDark] = useState(false);
 
   return (
-    <FluentProvider theme={isDark ? webDarkTheme : webLightTheme}>
+    <FluentProvider theme={isDark ? darkTheme : lightTheme}>
       <Stack tokens={{ childrenGap: 20 }} styles={{ root: { minHeight: '100vh' } }}>
         <Navbar isDark={isDark} setIsDark={setIsDark} />
         <Routes>
