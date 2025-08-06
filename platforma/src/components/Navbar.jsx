@@ -1,4 +1,4 @@
-import { CommandBar, Toggle } from '@fluentui/react';
+import { Switch, Toolbar, ToolbarButton } from '@fluentui/react-components';
 
 const navItems = [
   { key: 'home', text: 'Home', href: '#' },
@@ -13,27 +13,26 @@ const navItems = [
 ];
 
 export default function Navbar({ isDark, setIsDark }) {
-  const farItems = [
-    {
-      key: 'themeToggle',
-      onRender: () => (
-        <Toggle
-          inlineLabel
-          label="Dark mode"
-          checked={isDark}
-          onChange={(_, checked) => setIsDark(!!checked)}
-        />
-      ),
-    },
-  ];
-
   return (
-    <CommandBar
-      items={navItems}
-      farItems={farItems}
-      ariaLabel="Main navigation"
-      styles={{ root: { padding: '0 16px', background: 'var(--colorNeutralBackground1)' } }}
-    />
+    <Toolbar style={{ padding: '0 16px', background: 'var(--colorNeutralBackground1)' }}>
+      {navItems.map((item) => (
+        <ToolbarButton
+          key={item.key}
+          as="a"
+          href={item.href}
+          appearance="subtle"
+        >
+          {item.text}
+        </ToolbarButton>
+      ))}
+      <div style={{ marginLeft: 'auto' }}>
+        <Switch
+          checked={isDark}
+          label="Dark mode"
+          onChange={(_, data) => setIsDark(!!data.checked)}
+        />
+      </div>
+    </Toolbar>
   );
 }
 
