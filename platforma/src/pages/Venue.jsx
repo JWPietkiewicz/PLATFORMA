@@ -3,11 +3,11 @@ import VenueComponent from '../components/Venue';
 export default function Venue() {
   return (
     <VenueComponent
-      name="Sample Arena"
+      name="Mitch Richmond Arena"
       image="https://placehold.co/800x400"
-      address="123 Main St, City"
-      description="Home court for the sample team."
-      location="123 Main St, City"
+      address="Kazimierza Górskiego 10, 81-304 Gdynia, Poland"
+      description="Boisko nr 2 na kortach Arki"
+      location="Kazimierza Górskiego 10, 81-304 Gdynia, Poland"
     />
   );
 }
