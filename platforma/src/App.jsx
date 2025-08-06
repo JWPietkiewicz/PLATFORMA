@@ -31,7 +31,8 @@ export default function App() {
       <Stack tokens={{ childrenGap: 20 }} styles={{ root: { minHeight: '100vh' } }}>
         <Navbar isDark={isDark} setIsDark={setIsDark} />
         <Routes>
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/article" element={<Article />} />
           <Route path="/news" element={<News />} />
           <Route path="/game" element={<Game />} />
@@ -47,7 +48,6 @@ export default function App() {
           <Route path="/standings" element={<Standings />} />
           <Route path="/bracket" element={<Bracket />} />
           <Route path="/calendar" element={<Calendar />} />
-          <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
         <Footer />
       </Stack>

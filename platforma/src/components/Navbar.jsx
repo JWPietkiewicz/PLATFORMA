@@ -2,7 +2,7 @@ import { Switch, Toolbar, ToolbarButton } from '@fluentui/react-components';
 import { Link } from 'react-router-dom';
 
 const navItems = [
-  { key: 'home', text: 'Home', href: '/home' },
+  { key: 'home', text: 'Home', href: '/' },
   { key: 'article', text: 'Article', href: '/article' },
   { key: 'news', text: 'News', href: '/news' },
   { key: 'game', text: 'Game', href: '/game' },
