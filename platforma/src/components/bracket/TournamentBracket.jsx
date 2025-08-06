@@ -5,6 +5,7 @@ import {
   shorthands,
   tokens,
   mergeClasses,
+  useFluent,
 } from '@fluentui/react-components';
 
 const useStyles = makeStyles({
@@ -32,14 +33,22 @@ const useStyles = makeStyles({
     alignItems: 'center',
     columnGap: '4px',
   },
-  winnerTeam: {
-    ...shorthands.border('2px', 'solid', tokens.colorStatusSuccessForeground1),
-    ...shorthands.borderRadius(tokens.borderRadiusMedium),
-  },
   score: {
     display: 'flex',
     alignItems: 'center',
     columnGap: '4px',
+  },
+  scoreValue: {
+    ...shorthands.padding('0', '4px'),
+    ...shorthands.borderRadius(tokens.borderRadiusSmall),
+  },
+  winScore: {
+    backgroundColor: tokens.colorStatusSuccessBackground1,
+    color: tokens.colorNeutralForegroundOnBrand,
+  },
+  loseScore: {
+    backgroundColor: tokens.colorStatusDangerBackground1,
+    color: tokens.colorNeutralForegroundOnBrand,
   },
   lineRight: {
     position: 'absolute',
@@ -47,7 +56,6 @@ const useStyles = makeStyles({
     right: '-24px',
     width: '24px',
     height: '2px',
-    backgroundColor: tokens.colorNeutralStroke1,
   },
   lineLeft: {
     position: 'absolute',
@@ -55,19 +63,16 @@ const useStyles = makeStyles({
     left: '-24px',
     width: '24px',
     height: '2px',
-    backgroundColor: tokens.colorNeutralStroke1,
   },
   lineVerticalRight: {
     position: 'absolute',
     right: '-24px',
     width: '2px',
-    backgroundColor: tokens.colorNeutralStroke1,
   },
   lineVerticalLeft: {
     position: 'absolute',
     left: '-24px',
     width: '2px',
-    backgroundColor: tokens.colorNeutralStroke1,
   },
 });
 
@@ -81,6 +86,9 @@ function Match({
   style,
 }) {
   const styles = useStyles();
+  const { theme } = useFluent();
+  const isDark = theme.colorNeutralForeground1 === '#ffffff';
+  const connectorColor = isDark ? '#fff' : '#000';
   const scores = sides.map((s) => (s.score ?? 0));
   const winnerIndex = scores[0] >= scores[1] ? 0 : 1;
   return (
@@ -90,12 +98,18 @@ function Match({
         return (
           <div
             key={i}
-            className={mergeClasses(styles.team, isWinner && styles.winnerTeam)}
+            className={styles.team}
           >
             <Text weight={isWinner ? 'semibold' : 'regular'}>{side.team}</Text>
             <div className={styles.score}>
               {side.score !== undefined && (
-                <Text weight={isWinner ? 'semibold' : 'regular'}>
+                <Text
+                  weight={isWinner ? 'semibold' : 'regular'}
+                  className={mergeClasses(
+                    styles.scoreValue,
+                    isWinner ? styles.winScore : styles.loseScore,
+                  )}
+                >
                   {side.score}
                 </Text>
               )}
@@ -103,18 +117,36 @@ function Match({
           </div>
         );
       })}
-      {hasNext && <div className={styles.lineRight} />}
-      {hasPrev && <div className={styles.lineLeft} />}
+      {hasNext && (
+        <div
+          className={styles.lineRight}
+          style={{ backgroundColor: connectorColor }}
+        />
+      )}
+      {hasPrev && (
+        <div
+          className={styles.lineLeft}
+          style={{ backgroundColor: connectorColor }}
+        />
+      )}
       {hasNext && index % 2 === 0 && (
         <div
           className={styles.lineVerticalRight}
-          style={{ top: '50%', height: nextConnectorHeight }}
+          style={{
+            top: '50%',
+            height: nextConnectorHeight,
+            backgroundColor: connectorColor,
+          }}
         />
       )}
       {hasPrev && (
         <div
           className={styles.lineVerticalLeft}
-          style={{ top: 24 - prevConnectorHeight / 2, height: prevConnectorHeight }}
+          style={{
+            top: 24 - prevConnectorHeight / 2,
+            height: prevConnectorHeight,
+            backgroundColor: connectorColor,
+          }}
         />
       )}
     </Card>
