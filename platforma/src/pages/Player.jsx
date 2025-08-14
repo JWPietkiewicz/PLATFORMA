@@ -10,38 +10,38 @@ export default function Player() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function fetchPlayer() {
-      try {
-        const playerRef = doc(db, 'players', playerId);
-        const snapshot = await getDoc(playerRef);
+    if (!playerId) {
+      setError('No player specified');
+      setLoading(false);
+      return;
+    }
+
+    const playerRef = doc(db, 'players', playerId);
+    getDoc(playerRef)
+      .then((snapshot) => {
         if (snapshot.exists()) {
-          setPlayer(snapshot.data());
+          setPlayer({ id: snapshot.id, ...snapshot.data() });
         } else {
           setError('Player not found');
         }
-      } catch (error) {
-        console.error(error);
+      })
+      .catch((err) => {
+        console.error(err);
         setError('Failed to load player');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (playerId) {
-      fetchPlayer();
-    } else {
-      setError('No player specified');
-      setLoading(false);
-    }
+      })
+      .finally(() => setLoading(false));
   }, [playerId]);
 
   if (loading) return <p>Loading player...</p>;
   if (error) return <p>{error}</p>;
+  if (!player) return null;
 
   return (
     <div>
       <h1>{player.name}</h1>
-      <pre>{JSON.stringify(player, null, 2)}</pre>
+      {player.team && <p>Team: {player.team}</p>}
+      {player.position && <p>Position: {player.position}</p>}
+      {player.number && <p>Number: {player.number}</p>}
     </div>
   );
 }
