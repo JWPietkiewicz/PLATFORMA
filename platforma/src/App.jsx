@@ -40,7 +40,7 @@ export default function App() {
           <Route path="/tournament" element={<Tournament />} />
           <Route path="/season" element={<Season />} />
           <Route path="/league" element={<League />} />
-          <Route path="/player" element={<Player />} />
+          <Route path="/player/:playerId" element={<Player />} />
           <Route path="/players" element={<Players />} />
           <Route path="/team" element={<Team />} />
           <Route path="/teams" element={<Teams />} />
