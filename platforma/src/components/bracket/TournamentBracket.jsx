@@ -5,7 +5,6 @@ import {
   shorthands,
   tokens,
   mergeClasses,
-  useFluent,
 } from '@fluentui/react-components';
 
 const useStyles = makeStyles({
@@ -93,7 +92,6 @@ function Match({
   style,
 }) {
   const styles = useStyles();
-  const { theme } = useFluent();
   const connectorColor = tokens.colorNeutralForeground3Hover; //isDark ? '#fff' : '#000';
   const winnerIndex =
     sides[0].score === undefined
