@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 
 export default function Player() {
@@ -17,19 +17,26 @@ export default function Player() {
     }
 
     const playerRef = doc(db, 'players', playerId);
-    getDoc(playerRef)
-      .then((snapshot) => {
+    const unsubscribe = onSnapshot(
+      playerRef,
+      (snapshot) => {
         if (snapshot.exists()) {
           setPlayer({ id: snapshot.id, ...snapshot.data() });
+          setError(null);
         } else {
           setError('Player not found');
+          setPlayer(null);
         }
-      })
-      .catch((err) => {
+        setLoading(false);
+      },
+      (err) => {
         console.error(err);
         setError('Failed to load player');
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
   }, [playerId]);
 
   if (loading) return <p>Loading player...</p>;
