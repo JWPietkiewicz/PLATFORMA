@@ -45,7 +45,7 @@ const useStyles = makeStyles({
   matchCard: {
     position: 'relative',
     minWidth: '280px',
-    height: '72px',
+    height: '84px',
     display: 'grid',
     gridTemplateRows: '1fr 1fr',
     rowGap: 0,
@@ -65,7 +65,7 @@ const useStyles = makeStyles({
     gridTemplateColumns: '1fr auto',
     alignItems: 'center',
     columnGap: tokens.spacingHorizontalS,
-    ...shorthands.padding(tokens.spacingVerticalSNudge, tokens.spacingHorizontalM),
+    ...shorthands.padding(tokens.spacingVerticalS, tokens.spacingHorizontalM),
     // subtle divider between rows
     ':first-of-type': {
       boxShadow: 'inset 0 -1px var(--colorNeutralStroke2)'
@@ -199,10 +199,14 @@ function Match({
       {/* Connectors */}
       {hasNext && <div className={styles.connectorHorizontalRight} />}
       {hasPrev && <div className={styles.connectorHorizontalLeft} />}
-      {hasNext && index % 2 === 0 && (
+      {hasNext && (
         <div
           className={styles.connectorVerticalRight}
-          style={{ top: '50%', height: nextConnectorHeight }}
+          style={
+            index % 2 === 0
+              ? { top: '50%', height: nextConnectorHeight / 2 }
+              : { bottom: '50%', height: nextConnectorHeight / 2 }
+          }
         />
       )}
       {hasPrev && (
@@ -223,7 +227,7 @@ export default function TournamentBracket({ rounds = [] }) {
   const [hoveredTeamId, setHoveredTeamId] = React.useState(null);
 
   // Layout metrics
-  const matchHeight = 72;
+  const matchHeight = 84;
   const matchSpacing = matchHeight + 28; // height + gap
 
   const thirdPlaceRound = rounds.find((r) => r.name === 'Third Place');
