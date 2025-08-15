@@ -34,6 +34,11 @@ export default function GameCarousel() {
   React.useEffect(() => {
     const storage = getStorage();
     async function fetchGames() {
+      if (!db) {
+        setError(new Error('No database connection'));
+        setLoading(false);
+        return;
+      }
       try {
         const gamesRef = collection(db, 'games');
         const q = query(gamesRef, orderBy('date'));

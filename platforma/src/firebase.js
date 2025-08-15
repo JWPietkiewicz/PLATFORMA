@@ -17,7 +17,13 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase only once in the application
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const db = getFirestore(app);
+let db;
+try {
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  db = getFirestore(app);
+} catch (e) {
+  // Avoid crashing the UI if Firebase fails to initialize
+  console.error('Failed to initialize Firebase', e);
+}
 
 export { db };
