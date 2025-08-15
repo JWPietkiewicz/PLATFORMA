@@ -1,89 +1,138 @@
+import * as React from 'react';
 import {
   Card,
+  CardHeader,
   Text,
+  Caption1,
+  Badge,
+  Tooltip,
   makeStyles,
   shorthands,
   tokens,
   mergeClasses,
 } from '@fluentui/react-components';
-import { useState } from 'react';
+import { Trophy24Regular, Branch24Regular } from '@fluentui/react-icons';
 
 const useStyles = makeStyles({
-  bracket: {
-    display: 'flex',
-    columnGap: '32px',
-    alignItems: 'flex-start',
+  root: {
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'max-content',
+    columnGap: tokens.spacingHorizontalXL,
+    width: '100%',
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    ...shorthands.padding(tokens.spacingVerticalM, tokens.spacingHorizontalM),
   },
   round: {
-    display: 'flex',
-    flexDirection: 'column',
+    minWidth: '240px',
+    display: 'grid',
+    rowGap: tokens.spacingVerticalS,
   },
-  match: {
-    minWidth: '200px',
-    height: '64px',
-    position: 'relative',
+  roundHeader: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    overflow: 'visible',
-  },
-  team: {
-    display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    columnGap: '4px',
-    selectors: {
-      '&:not(:last-child)': {
-        borderBottom: `2px solid ${tokens.colorNeutralStroke3}`,
-      },
+    gap: tokens.spacingHorizontalSNudge,
+    backgroundColor: 'var(--colorNeutralBackground1)',
+    ...shorthands.padding(tokens.spacingVerticalSNudge, 0),
+  },
+  matchesStack: {
+    display: 'block',
+  },
+  matchCard: {
+    position: 'relative',
+    minWidth: '220px',
+    height: '72px',
+    display: 'grid',
+    gridTemplateRows: '1fr 1fr',
+    rowGap: 0,
+    backgroundColor: 'var(--colorNeutralBackground1)',
+    boxShadow: tokens.shadow16,
+    ...shorthands.border('1px', 'solid', 'var(--colorNeutralStroke2)'),
+    ...shorthands.borderRadius(tokens.borderRadiusLarge),
+    transitionProperty: 'transform, box-shadow',
+    transitionDuration: tokens.durationNormal,
+    ':hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: tokens.shadow28,
     },
+  },
+  teamRow: {
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    alignItems: 'center',
+    columnGap: tokens.spacingHorizontalS,
+    ...shorthands.padding(tokens.spacingVerticalSNudge, tokens.spacingHorizontalM),
+    // subtle divider between rows
+    ':first-of-type': {
+      boxShadow: 'inset 0 -1px var(--colorNeutralStroke2)'
+    },
+  },
+  teamName: {
+    minWidth: 0,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
+  scorePill: {
+    justifySelf: 'end',
+    fontVariantNumeric: 'tabular-nums',
+    ...shorthands.padding('2px', tokens.spacingHorizontalSNudge),
+    ...shorthands.borderRadius(tokens.borderRadiusMedium),
+  },
+  scoreWin: {
+    backgroundColor: tokens.colorStatusSuccessBackground3,
+    color: tokens.colorNeutralForegroundOnBrand,
+  },
+  scoreLose: {
+    backgroundColor: tokens.colorStatusDangerBackground3,
+    color: tokens.colorNeutralForegroundOnBrand,
   },
   highlight: {
     backgroundColor: tokens.colorBrandBackground,
     color: tokens.colorNeutralForegroundOnBrand,
+    ':first-of-type': {
+      boxShadow: 'inset 0 -1px rgba(255,255,255,0.2)'
+    },
   },
-  score: {
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '4px',
-  },
-  scoreValue: {
-    ...shorthands.padding('2px', '4px'),
-    ...shorthands.borderRadius(tokens.borderRadiusSmall),
-  },
-  winScore: {
-    backgroundColor: tokens.colorStatusSuccessBackground3,
-    color: tokens.colorNeutralForegroundOnBrand,
-  },
-  loseScore: {
-    backgroundColor: tokens.colorStatusDangerBackground3,
-    color: tokens.colorNeutralForegroundOnBrand,
-  },
-  lineRight: {
+  connectorHorizontalRight: {
     position: 'absolute',
     top: '50%',
     right: '-16px',
     width: '16px',
     height: '2px',
     transform: 'translateY(-50%)',
+    backgroundColor: 'var(--colorNeutralStroke2)',
   },
-  lineLeft: {
+  connectorHorizontalLeft: {
     position: 'absolute',
     top: '50%',
     left: '-16px',
     width: '16px',
     height: '2px',
     transform: 'translateY(-50%)',
+    backgroundColor: 'var(--colorNeutralStroke2)',
   },
-  lineVerticalRight: {
+  connectorVerticalRight: {
     position: 'absolute',
     right: '-16px',
     width: '2px',
+    backgroundColor: 'var(--colorNeutralStroke2)',
   },
-  lineVerticalLeft: {
+  connectorVerticalLeft: {
     position: 'absolute',
     left: '-16px',
-    width: '0',
+    width: '2px',
+    backgroundColor: 'var(--colorNeutralStroke2)',
+  },
+  finalsBadge: {
+    marginInlineStart: tokens.spacingHorizontalSNudge,
+  },
+  thirdPlaceSpacer: {
+    height: tokens.spacingVerticalXL,
   },
 });
 
@@ -99,144 +148,161 @@ function Match({
   setHoveredTeamId,
 }) {
   const styles = useStyles();
-  const connectorColor = tokens.colorNeutralForeground3Hover;
+
   const winnerIndex =
     sides[0].score === undefined
       ? 1
       : sides[1].score === undefined
-        ? 0
-        : sides[0].score >= sides[1].score
-          ? 0
-          : 1;
+      ? 0
+      : sides[0].score >= sides[1].score
+      ? 0
+      : 1;
+
+  const getScoreClass = (isWinner) =>
+    mergeClasses(styles.scorePill, isWinner ? styles.scoreWin : styles.scoreLose);
+
   return (
-    <Card className={styles.match} appearance="filled" style={style}>
+    <Card appearance="filled" className={styles.matchCard} style={style} aria-label={`${sides[0]?.team ?? 'TBD'} vs ${sides[1]?.team ?? 'TBD'}`}>
       {sides.map((side, i) => {
         const isWinner = winnerIndex === i;
         const isHovered = hoveredTeamId === side.id;
+        const rowClasses = mergeClasses(styles.teamRow, isHovered && styles.highlight);
+        const scoreClasses = getScoreClass(isWinner);
         return (
-          <div
-            key={side.id ?? i}
-            className={mergeClasses(styles.team, isHovered && styles.highlight)}
-            onMouseEnter={() => setHoveredTeamId(side.id)}
-            onMouseLeave={() => setHoveredTeamId(null)}
-          >
-            <Text weight={isWinner ? 'bold' : 'regular'}>{side.team}</Text>
-            <div className={styles.score}>
-              {side.score !== undefined && (
-                <Text
-                  weight={isWinner ? 'bold' : 'regular'}
-                  className={mergeClasses(
-                    styles.scoreValue,
-                    isWinner ? styles.winScore : styles.loseScore,
-                  )}
-                >
+          <Tooltip key={side.id ?? i} content={side.team} relationship="description">
+            <div
+              className={rowClasses}
+              onMouseEnter={() => setHoveredTeamId(side.id)}
+              onMouseLeave={() => setHoveredTeamId(null)}
+              role="button"
+              tabIndex={0}
+            >
+              <Text weight={isWinner ? 'semibold' : 'regular'} className={styles.teamName}>
+                {side.team ?? 'TBD'}
+              </Text>
+              {side.score !== undefined ? (
+                <Text weight={isWinner ? 'semibold' : 'regular'} className={scoreClasses}>
                   {side.score}
                 </Text>
+              ) : (
+                <Badge appearance="outline" size="tiny">—</Badge>
               )}
             </div>
-          </div>
+          </Tooltip>
         );
       })}
-      {hasNext && (
-        <div
-          className={styles.lineRight}
-          style={{ backgroundColor: connectorColor }}
-        />
-      )}
-      {hasPrev && (
-        <div
-          className={styles.lineLeft}
-          style={{ backgroundColor: connectorColor }}
-        />
-      )}
+
+      {/* Connectors */}
+      {hasNext && <div className={styles.connectorHorizontalRight} />}
+      {hasPrev && <div className={styles.connectorHorizontalLeft} />}
       {hasNext && index % 2 === 0 && (
         <div
-          className={styles.lineVerticalRight}
-          style={{
-            top: '50%',
-            height: nextConnectorHeight,
-            backgroundColor: connectorColor,
-          }}
+          className={styles.connectorVerticalRight}
+          style={{ top: '50%', height: nextConnectorHeight }}
         />
       )}
       {hasPrev && (
         <div
-          className={styles.lineVerticalLeft}
-          style={{
-            top: `calc(50% - ${prevConnectorHeight / 2}px)`,
-            height: prevConnectorHeight,
-            backgroundColor: connectorColor,
-          }}
+          className={styles.connectorVerticalLeft}
+          style={{ top: `calc(50% - ${prevConnectorHeight / 2}px)`, height: prevConnectorHeight }}
         />
       )}
+
+      {/* Hidden header for better screen reader context */}
+      <CardHeader visuallyHidden header={<Text>{`${sides[0]?.team ?? 'TBD'} vs ${sides[1]?.team ?? 'TBD'}`}</Text>} />
     </Card>
   );
 }
 
 export default function TournamentBracket({ rounds = [] }) {
   const styles = useStyles();
-  const [hoveredTeamId, setHoveredTeamId] = useState(null);
-  const matchHeight = 64;
-  const matchSpacing = matchHeight + 24; // match height + gap
+  const [hoveredTeamId, setHoveredTeamId] = React.useState(null);
+
+  // Layout metrics
+  const matchHeight = 72;
+  const matchSpacing = matchHeight + 28; // height + gap
+
   const thirdPlaceRound = rounds.find((r) => r.name === 'Third Place');
   const displayRounds = rounds.filter((r) => r.name !== 'Third Place');
+
   return (
-    <div className={styles.bracket}>
+    <div className={styles.root}>
       {displayRounds.map((round, rIndex) => {
-        const isFinal = round.name === 'Finals';
+        const isFinal = round.name?.toLowerCase?.() === 'finals' || round.name?.toLowerCase?.() === 'final';
         return (
           <div key={rIndex} className={styles.round}>
-            <Text weight="semibold">{round.name}</Text>
-            {round.matches.map((match, mIndex) => {
-              const spacing = matchSpacing * Math.pow(2, rIndex);
-              const offset = rIndex === 0 ? 0 : spacing / 2 - matchHeight / 2;
-              const marginTop = mIndex === 0 ? offset : spacing - matchHeight;
-              const hasPrev = rIndex > 0;
-              const hasNext = rIndex < displayRounds.length - 1;
-              const prevSpacing = matchSpacing * Math.pow(2, rIndex - 1);
-              const nextSpacing = spacing;
-              return (
-                <Match
-                  key={match.id}
-                  sides={match.sides}
-                  hasPrev={hasPrev}
-                  hasNext={hasNext}
-                  index={mIndex}
-                  prevConnectorHeight={prevSpacing}
-                  nextConnectorHeight={nextSpacing}
-                  style={{ marginTop }}
-                  hoveredTeamId={hoveredTeamId}
-                  setHoveredTeamId={setHoveredTeamId}
-                />
-              );
-            })}
-            {isFinal && thirdPlaceRound && (
-              <>
-                <Text weight="semibold" style={{ marginTop: matchSpacing }}>
-                  {thirdPlaceRound.name}
-                </Text>
-                {thirdPlaceRound.matches.map((match, mIndex) => {
-                  const marginTop = mIndex === 0 ? 0 : matchSpacing - matchHeight;
-                  return (
-                    <Match
-                      key={match.id}
-                      sides={match.sides}
-                      hasPrev={false}
-                      hasNext={false}
-                      index={mIndex}
-                      prevConnectorHeight={0}
-                      nextConnectorHeight={0}
-                      style={{ marginTop }}
-                      hoveredTeamId={hoveredTeamId}
-                      setHoveredTeamId={setHoveredTeamId}
-                    />
-                  );
-                })}
-              </>
-            )}
+            <div className={styles.roundHeader}>
+              {isFinal ? <Trophy24Regular /> : <Branch24Regular />}
+              <Text weight="semibold">{round.name}</Text>
+              {isFinal && (
+                <Badge size="small" appearance="tint" color="brand" className={styles.finalsBadge}>
+                  Title Match
+                </Badge>
+              )}
+            </div>
+
+            <div className={styles.matchesStack}>
+              {round.matches.map((match, mIndex) => {
+                const spacing = matchSpacing * Math.pow(2, rIndex);
+                const offset = rIndex === 0 ? 0 : spacing / 2 - matchHeight / 2;
+                const marginTop = mIndex === 0 ? offset : spacing - matchHeight;
+                const hasPrev = rIndex > 0;
+                const hasNext = rIndex < displayRounds.length - 1;
+                const prevSpacing = matchSpacing * Math.pow(2, rIndex - 1);
+                const nextSpacing = spacing;
+                return (
+                  <Match
+                    key={match.id ?? `${rIndex}-${mIndex}`}
+                    sides={match.sides}
+                    hasPrev={hasPrev}
+                    hasNext={hasNext}
+                    index={mIndex}
+                    prevConnectorHeight={prevSpacing}
+                    nextConnectorHeight={nextSpacing}
+                    style={{ marginTop }}
+                    hoveredTeamId={hoveredTeamId}
+                    setHoveredTeamId={setHoveredTeamId}
+                  />
+                );
+              })}
+
+              {/* Third place column appears under finals */}
+              {isFinal && thirdPlaceRound && (
+                <>
+                  <div className={styles.thirdPlaceSpacer} />
+                  <div className={styles.roundHeader}>
+                    <Branch24Regular />
+                    <Text weight="semibold">{thirdPlaceRound.name}</Text>
+                    <Badge size="tiny" appearance="outline">Placement</Badge>
+                  </div>
+                  {thirdPlaceRound.matches.map((match, mIndex) => {
+                    const marginTop = mIndex === 0 ? 0 : matchSpacing - matchHeight;
+                    return (
+                      <Match
+                        key={match.id ?? `third-${mIndex}`}
+                        sides={match.sides}
+                        hasPrev={false}
+                        hasNext={false}
+                        index={mIndex}
+                        prevConnectorHeight={0}
+                        nextConnectorHeight={0}
+                        style={{ marginTop }}
+                        hoveredTeamId={hoveredTeamId}
+                        setHoveredTeamId={setHoveredTeamId}
+                      />
+                    );
+                  })}
+                </>
+              )}
+            </div>
           </div>
         );
       })}
+
+      {/* Screen-reader only label */}
+      <Caption1 visuallyHidden>
+        Tournament bracket. Use left and right arrow keys to scroll rounds.
+      </Caption1>
     </div>
   );
 }
