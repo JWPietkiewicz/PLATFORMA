@@ -8,6 +8,7 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import { Image } from '@fluentui/react';
+import { useNavigate } from 'react-router-dom';
 
 const newsItems = [
   {
@@ -24,16 +25,6 @@ const newsItems = [
     title: 'Community outreach initiative',
     image: 'https://placehold.co/300x200?text=News+3',
     story: 'Teams collaborate with local groups for youth development.',
-  },
-  {
-    title: 'Mid-season tournament announced',
-    image: 'https://placehold.co/300x200?text=News+4',
-    story: 'A new tournament will test squads in a high-stakes showdown.',
-  },
-  {
-    title: 'Championship game venue revealed',
-    image: 'https://placehold.co/300x200?text=News+5',
-    story: 'The final match will be held at a newly renovated arena.',
   },
 ];
 
@@ -63,6 +54,7 @@ const useStyles = makeStyles({
 
 export default function Home() {
   const styles = useStyles();
+  const navigate = useNavigate();
   return (
     <PageLayout title="Home">
       <ImageCarousel />
@@ -76,6 +68,13 @@ export default function Home() {
             <Text>{item.story}</Text>
           </Card>
         ))}
+        <Card
+          className={styles.card}
+          onClick={() => navigate('/news')}
+          style={{ cursor: 'pointer', justifyContent: 'center', alignItems: 'center' }}
+        >
+          <Text weight="semibold">View all news</Text>
+        </Card>
       </div>
     </PageLayout>
   );
