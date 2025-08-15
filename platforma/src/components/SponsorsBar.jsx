@@ -1,20 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react';
 import './SponsorsBar.css';
-
-const sponsors = [
-  'DOMBI',
-  'METALZBYT',
-  'TREFL SOPOT',
-  'KLIMAZBYT HURTOWNIA BRANŻOWA',
-  'USZYTE',
-  'KINGUIN ESPORTS LOUNGE',
-  'ARKA GDYNIA',
-  'HEMPATIA',
-  'POLITECHNIKA GDAŃSKA',
-  'KOCHAMY AKTYWNOŚĆ',
-  'SKLEP KOSZYKARZA',
-];
+import sponsors from '../data/sponsors';
 
 export default function SponsorsBar() {
   const [index, setIndex] = useState(0);

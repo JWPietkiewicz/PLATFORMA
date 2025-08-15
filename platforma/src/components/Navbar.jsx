@@ -18,6 +18,7 @@ const navItems = [
   { key: 'standings', text: 'Standings', to: '/standings' },
   { key: 'bracket', text: 'Bracket', to: '/bracket' },
   { key: 'calendar', text: 'Calendar', to: '/calendar' },
+  { key: 'sponsors', text: 'Sponsors', to: '/sponsors' },
 ];
 
 export default function Navbar({ isDark, setIsDark }) {
