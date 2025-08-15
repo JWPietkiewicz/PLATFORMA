@@ -1,17 +1,35 @@
-import { useEffect, useState } from 'react';
-import { Stack, IconButton } from '@fluentui/react';
+import * as React from 'react';
+import { Button, makeStyles, tokens } from '@fluentui/react-components';
+import { ChevronLeft24Regular, ChevronRight24Regular } from '@fluentui/react-icons';
 import { collection, getDocs, getDoc, orderBy, query } from 'firebase/firestore';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import GameCard from './GameCard';
 import { db } from '../firebase';
 
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: tokens.spacingHorizontalM,
+    maxWidth: '840px',
+    margin: `${tokens.spacingVerticalXLarge} auto`,
+  },
+  track: {
+    display: 'flex',
+    overflow: 'hidden',
+    gap: tokens.spacingHorizontalM,
+  },
+});
+
 const visibleCount = 5;
 
 export default function GameCarousel() {
-  const [games, setGames] = useState([]);
-  const [index, setIndex] = useState(0);
+  const styles = useStyles();
+  const [games, setGames] = React.useState([]);
+  const [index, setIndex] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const storage = getStorage();
     async function fetchGames() {
       const gamesRef = collection(db, 'games');
@@ -73,15 +91,27 @@ export default function GameCarousel() {
   const visible = games.slice(index, index + visibleCount);
 
   return (
-    <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 8 }} styles={{ root: { maxWidth: 800, margin: '20px auto' } }}>
-      <IconButton iconProps={{ iconName: 'ChevronLeft' }} ariaLabel="Previous" onClick={prev} disabled={index === 0} />
-      <Stack horizontal tokens={{ childrenGap: 8 }} styles={{ root: { overflow: 'hidden' } }}>
+    <div className={styles.root}>
+      <Button
+        appearance="subtle"
+        icon={<ChevronLeft24Regular />}
+        aria-label="Previous games"
+        onClick={prev}
+        disabled={index === 0}
+      />
+      <div className={styles.track}>
         {visible.map(game => (
           <GameCard key={game.id} game={game} />
         ))}
-      </Stack>
-      <IconButton iconProps={{ iconName: 'ChevronRight' }} ariaLabel="Next" onClick={next} disabled={index + visibleCount >= games.length} />
-    </Stack>
+      </div>
+      <Button
+        appearance="subtle"
+        icon={<ChevronRight24Regular />}
+        aria-label="Next games"
+        onClick={next}
+        disabled={index + visibleCount >= games.length}
+      />
+    </div>
   );
 }
 

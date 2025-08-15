@@ -1,61 +1,159 @@
-import { Stack, Image } from '@fluentui/react';
-import { Text, makeStyles, shorthands, tokens } from '@fluentui/react-components';
+import * as React from 'react';
+import {
+  Card,
+  CardHeader,
+  Text,
+  Badge,
+  Image,
+  makeStyles,
+  shorthands,
+  tokens,
+  Caption1,
+} from '@fluentui/react-components';
+import { Location24Regular } from '@fluentui/react-icons';
 
 const useStyles = makeStyles({
   card: {
-    ...shorthands.border('1px', 'solid', 'var(--colorNeutralStroke1)'),
-    ...shorthands.padding(tokens.spacingHorizontalS),
-    minWidth: '160px',
-    boxShadow: tokens.shadow16,
-    borderRadius: tokens.borderRadiusMedium,
+    maxWidth: '420px',
+    width: '100%',
+    backgroundColor: 'var(--colorNeutralBackground1)',
+    ...shorthands.borderRadius(tokens.borderRadiusXLarge),
+    boxShadow: tokens.shadow28,
+    // Subtle border for light/dark modes
+    ...shorthands.border('1px', 'solid', 'var(--colorNeutralStroke2)'),
   },
-  header: {
-    backgroundColor: 'var(--colorNeutralForeground2BrandHover)',
-    color: 'var(--colorNeutralForeground1)',
+  headerBar: {
+    background:
+      'linear-gradient(90deg, var(--colorBrandBackground) 0%, var(--colorBrandBackground2, var(--colorBrandBackground)) 100%)',
+    color: 'var(--colorNeutralForegroundOnBrand)',
     textAlign: 'center',
-    ...shorthands.padding('4px'),
-    margin: `-${tokens.spacingHorizontalS} -${tokens.spacingHorizontalS} ${tokens.spacingHorizontalS}`,
-    borderTopLeftRadius: tokens.borderRadiusMedium,
-    borderTopRightRadius: tokens.borderRadiusMedium,
+    ...shorthands.padding(tokens.spacingHorizontalSNudge, tokens.spacingHorizontalM),
+    ...shorthands.borderTopLeftRadius(tokens.borderRadiusXLarge),
+    ...shorthands.borderTopRightRadius(tokens.borderRadiusXLarge),
   },
-  teamRow: {
+  headerContent: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: tokens.spacingHorizontalS,
+    flexWrap: 'wrap',
+  },
+  body: {
+    display: 'grid',
+    gridTemplateRows: 'auto auto auto',
+    rowGap: tokens.spacingVerticalS,
+    ...shorthands.padding(tokens.spacingVerticalM, tokens.spacingHorizontalM),
+  },
+  teamRow: {
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr auto',
+    alignItems: 'center',
     columnGap: tokens.spacingHorizontalS,
   },
-  venue: {
-    textAlign: 'center',
+  teamLogo: {
+    width: '28px',
+    height: '28px',
+    borderRadius: tokens.borderRadiusCircular,
+    backgroundColor: 'var(--colorNeutralBackground3)',
+    ...shorthands.overflow('hidden'),
+  },
+  teamName: {
+    minWidth: 0,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+  scorePill: {
+    justifySelf: 'end',
+    backgroundColor: 'var(--colorNeutralBackground3)',
+    ...shorthands.borderRadius(tokens.borderRadiusMedium),
+    ...shorthands.padding('2px', tokens.spacingHorizontalSNudge),
+    fontVariantNumeric: 'tabular-nums',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: 'var(--colorNeutralStroke2)',
+    opacity: 0.6,
+    marginTop: tokens.spacingVerticalSNudge,
+    marginBottom: tokens.spacingVerticalSNudge,
+  },
+  venueRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: tokens.spacingHorizontalSNudge,
+    color: 'var(--colorNeutralForeground2)',
   },
 });
 
 export default function GameCard({ game }) {
   const styles = useStyles();
-  const dateObj = game.date?.toDate ? game.date.toDate() : new Date(game.date);
-  const date = dateObj.toLocaleDateString();
-  const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const dateObj = game?.date?.toDate ? game.date.toDate() : new Date(game?.date);
+
+  // Defensive: if date is invalid, avoid throwing
+  const isValidDate = dateObj instanceof Date && !isNaN(dateObj.getTime());
+  const dateStr = isValidDate
+    ? new Intl.DateTimeFormat(undefined, { weekday: 'short', month: 'short', day: 'numeric' }).format(dateObj)
+    : '';
+  const timeStr = isValidDate
+    ? new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' }).format(dateObj)
+    : '';
 
   return (
-    <Stack className={styles.card} tokens={{ childrenGap: 4 }}>
-      <div className={styles.header}>
-        <Text size={200}>{date} {time}</Text>
+    <Card className={styles.card} appearance="filled">
+      {/* Header bar */}
+      <div className={styles.headerBar}>
+        <div className={styles.headerContent}>
+          <Text size={300} weight="semibold">
+            {dateStr}
+          </Text>
+          {timeStr && <Badge appearance="tint" color="brand" size="small">{timeStr}</Badge>}
+        </div>
       </div>
-      <div className={styles.teamRow}>
-        {game.teamA?.logoUrl && (
-          <Image src={game.teamA.logoUrl} width={24} height={24} alt={game.teamA.name} />
+
+      {/* Body */}
+      <div className={styles.body}>
+        {/* Team A */}
+        <div className={styles.teamRow}>
+          {game?.teamA?.logoUrl ? (
+            <Image src={game.teamA.logoUrl} alt={game?.teamA?.name ?? 'Team A'} className={styles.teamLogo} fit="cover" />
+          ) : (
+            <div className={styles.teamLogo} />
+          )}
+          <Text className={styles.teamName}>{game?.teamA?.name ?? 'Team A'}</Text>
+          <Text weight="semibold" className={styles.scorePill}>
+            {game?.teamAScore ?? '—'}
+          </Text>
+        </div>
+
+        <div className={styles.divider} />
+
+        {/* Team B */}
+        <div className={styles.teamRow}>
+          {game?.teamB?.logoUrl ? (
+            <Image src={game.teamB.logoUrl} alt={game?.teamB?.name ?? 'Team B'} className={styles.teamLogo} fit="cover" />
+          ) : (
+            <div className={styles.teamLogo} />
+          )}
+          <Text className={styles.teamName}>{game?.teamB?.name ?? 'Team B'}</Text>
+          <Text weight="semibold" className={styles.scorePill}>
+            {game?.teamBScore ?? '—'}
+          </Text>
+        </div>
+
+        {/* Venue */}
+        {game?.venue && (
+          <div className={styles.venueRow}>
+            <Location24Regular />
+            <Caption1>{game.venue}</Caption1>
+          </div>
         )}
-        <Text>{game.teamA?.name}</Text>
-        <Text weight="semibold">{game.teamAScore}</Text>
       </div>
-      <div className={styles.teamRow}>
-        {game.teamB?.logoUrl && (
-          <Image src={game.teamB.logoUrl} width={24} height={24} alt={game.teamB.name} />
-        )}
-        <Text>{game.teamB?.name}</Text>
-        <Text weight="semibold">{game.teamBScore}</Text>
-      </div>
-      <Text className={styles.venue} size={200}>{game.venue}</Text>
-    </Stack>
+
+      {/* Optional CardHeader for accessibility / semantics */}
+      <CardHeader visuallyHidden headerText={`${game?.teamA?.name ?? 'Team A'} vs ${game?.teamB?.name ?? 'Team B'}`} />
+    </Card>
   );
 }
 
