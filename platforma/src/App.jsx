@@ -22,6 +22,7 @@ import Schedule from './pages/Schedule';
 import Standings from './pages/Standings';
 import Bracket from './pages/Bracket';
 import Calendar from './pages/Calendar';
+import Contact from './pages/Contact';
 
 initializeIcons();
 
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="/standings" element={<Standings />} />
           <Route path="/bracket" element={<Bracket />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
         <Stack tokens={{ childrenGap: 0 }}>
           <SponsorsBar />
