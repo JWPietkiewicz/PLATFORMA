@@ -9,24 +9,7 @@ import {
 } from '@fluentui/react-components';
 import { Image } from '@fluentui/react';
 import { useNavigate } from 'react-router-dom';
-
-const newsItems = [
-  {
-    title: 'League kicks off new season',
-    image: 'https://placehold.co/300x200?text=News+1',
-    story: 'The new season starts with intense matches and fresh rivalries.',
-  },
-  {
-    title: 'Star player joins the roster',
-    image: 'https://placehold.co/300x200?text=News+2',
-    story: 'A top athlete signs with the team, boosting championship hopes.',
-  },
-  {
-    title: 'Community outreach initiative',
-    image: 'https://placehold.co/300x200?text=News+3',
-    story: 'Teams collaborate with local groups for youth development.',
-  },
-];
+import { useLanguage } from '../i18n';
 
 const useStyles = makeStyles({
   newsGrid: {
@@ -55,8 +38,10 @@ const useStyles = makeStyles({
 export default function Home() {
   const styles = useStyles();
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const newsItems = t('home.newsItems');
   return (
-    <PageLayout title="Home">
+    <PageLayout title={t('pages.home')}>
       <ImageCarousel />
       <div className={styles.newsGrid}>
         {newsItems.map((item) => (
@@ -73,7 +58,7 @@ export default function Home() {
           onClick={() => navigate('/news')}
           style={{ cursor: 'pointer', justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text weight="semibold">View all news</Text>
+          <Text weight="semibold">{t('home.viewAllNews')}</Text>
         </Card>
       </div>
     </PageLayout>
