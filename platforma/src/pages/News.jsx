@@ -8,11 +8,11 @@ import {
   Divider,
   Badge,
   Link,
-  Image,
   makeStyles,
   shorthands,
   tokens,
 } from '@fluentui/react-components';
+import { Image } from '@fluentui/react';
 import { News20Regular, ArrowRight16Regular, MegaphoneLoud24Regular } from '@fluentui/react-icons';
 import PageLayout from '../components/PageLayout';
 
