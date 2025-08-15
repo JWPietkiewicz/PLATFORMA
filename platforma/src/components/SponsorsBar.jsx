@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react';
+import './SponsorsBar.css';
 
 const sponsors = [
   'DOMBI',
@@ -41,7 +42,13 @@ export default function SponsorsBar() {
         justifyContent: 'center',
       }}
     >
-      <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 8 }}>
+      <Stack
+        key={index}
+        className="sponsor-fade"
+        horizontal
+        verticalAlign="center"
+        tokens={{ childrenGap: 8 }}
+      >
         {visible}
       </Stack>
     </div>

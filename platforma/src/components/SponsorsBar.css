@@ -1,0 +1,15 @@
+.sponsor-fade {
+  animation: sponsorFade 1s ease-in-out;
+}
+
+@keyframes sponsorFade {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
