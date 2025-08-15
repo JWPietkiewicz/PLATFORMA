@@ -6,6 +6,7 @@ import {
   tokens,
   mergeClasses,
 } from '@fluentui/react-components';
+import { useState } from 'react';
 
 const useStyles = makeStyles({
   bracket: {
@@ -36,6 +37,10 @@ const useStyles = makeStyles({
         borderBottom: `2px solid ${tokens.colorNeutralStroke3}`,
       },
     },
+  },
+  highlight: {
+    backgroundColor: tokens.colorBrandBackground,
+    color: tokens.colorNeutralForegroundOnBrand,
   },
   score: {
     display: 'flex',
@@ -90,6 +95,8 @@ function Match({
   prevConnectorHeight,
   nextConnectorHeight,
   style,
+  hoveredTeamId,
+  setHoveredTeamId,
 }) {
   const styles = useStyles();
   const connectorColor = tokens.colorNeutralForeground3Hover;
@@ -105,10 +112,13 @@ function Match({
     <Card className={styles.match} appearance="filled" style={style}>
       {sides.map((side, i) => {
         const isWinner = winnerIndex === i;
+        const isHovered = hoveredTeamId === side.id;
         return (
           <div
             key={side.id ?? i}
-            className={styles.team}
+            className={mergeClasses(styles.team, isHovered && styles.highlight)}
+            onMouseEnter={() => setHoveredTeamId(side.id)}
+            onMouseLeave={() => setHoveredTeamId(null)}
           >
             <Text weight={isWinner ? 'bold' : 'regular'}>{side.team}</Text>
             <div className={styles.score}>
@@ -165,6 +175,7 @@ function Match({
 
 export default function TournamentBracket({ rounds = [] }) {
   const styles = useStyles();
+  const [hoveredTeamId, setHoveredTeamId] = useState(null);
   const matchHeight = 64;
   const matchSpacing = matchHeight + 24; // match height + gap
   const thirdPlaceRound = rounds.find((r) => r.name === 'Third Place');
@@ -194,6 +205,8 @@ export default function TournamentBracket({ rounds = [] }) {
                   prevConnectorHeight={prevSpacing}
                   nextConnectorHeight={nextSpacing}
                   style={{ marginTop }}
+                  hoveredTeamId={hoveredTeamId}
+                  setHoveredTeamId={setHoveredTeamId}
                 />
               );
             })}
@@ -214,6 +227,8 @@ export default function TournamentBracket({ rounds = [] }) {
                       prevConnectorHeight={0}
                       nextConnectorHeight={0}
                       style={{ marginTop }}
+                      hoveredTeamId={hoveredTeamId}
+                      setHoveredTeamId={setHoveredTeamId}
                     />
                   );
                 })}
