@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Schedule() {
-  return <h1>Schedule</h1>;
+  return <PageLayout title="Schedule" />;
 }

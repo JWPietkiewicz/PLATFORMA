@@ -1,4 +1,5 @@
 import { Text } from '@fluentui/react-components';
+import PageLayout from '../components/PageLayout';
 import TournamentBracket from '../components/bracket/TournamentBracket';
 
 function roundName(size) {
@@ -72,10 +73,7 @@ const examples = [32, 24, 16, 12, 8, 4].map((count) => ({
 
 export default function Bracket() {
   return (
-    <div style={{ padding: 16 }}>
-      <Text as="h1" size={800} block>
-        Bracket
-      </Text>
+    <PageLayout title="Bracket">
       {examples.map((ex) => (
         <div key={ex.count} style={{ marginTop: 32 }}>
           <Text as="h2" size={500} block>
@@ -84,7 +82,6 @@ export default function Bracket() {
           <TournamentBracket rounds={ex.rounds} />
         </div>
       ))}
-    </div>
+    </PageLayout>
   );
 }
-

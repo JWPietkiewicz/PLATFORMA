@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Season() {
-  return <h1>Season</h1>;
+  return <PageLayout title="Season" />;
 }

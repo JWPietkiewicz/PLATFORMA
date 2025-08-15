@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function News() {
-  return <h1>News</h1>;
+  return <PageLayout title="News" />;
 }

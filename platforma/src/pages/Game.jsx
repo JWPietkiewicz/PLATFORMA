@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Game() {
-  return <h1>Game</h1>;
+  return <PageLayout title="Game" />;
 }

@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Team() {
-  return <h1>Team</h1>;
+  return <PageLayout title="Team" />;
 }

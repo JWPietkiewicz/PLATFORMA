@@ -1,10 +1,10 @@
 import ImageCarousel from '../components/ImageCarousel';
+import PageLayout from '../components/PageLayout';
 
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
+    <PageLayout title="Home">
       <ImageCarousel />
-    </div>
+    </PageLayout>
   );
 }

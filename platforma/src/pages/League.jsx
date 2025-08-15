@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function League() {
-  return <h1>League</h1>;
+  return <PageLayout title="League" />;
 }
