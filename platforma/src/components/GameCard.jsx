@@ -13,18 +13,18 @@ export default function GameCard({ game }) {
     >
       <Text align="center" size={200}>{date} {time}</Text>
       <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 4 }} horizontalAlign="center">
-        {game.teamA?.logo && (
-          <Image src={game.teamA.logo} width={24} height={24} alt={game.teamA.name} />
+        {game.teamA?.logoUrl && (
+          <Image src={game.teamA.logoUrl} width={24} height={24} alt={game.teamA.name} />
         )}
         <Text>{game.teamA?.name}</Text>
-        <Text weight="semibold">{game.teamA?.score}</Text>
+        <Text weight="semibold">{game.teamAScore}</Text>
       </Stack>
       <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 4 }} horizontalAlign="center">
-        {game.teamB?.logo && (
-          <Image src={game.teamB.logo} width={24} height={24} alt={game.teamB.name} />
+        {game.teamB?.logoUrl && (
+          <Image src={game.teamB.logoUrl} width={24} height={24} alt={game.teamB.name} />
         )}
         <Text>{game.teamB?.name}</Text>
-        <Text weight="semibold">{game.teamB?.score}</Text>
+        <Text weight="semibold">{game.teamBScore}</Text>
       </Stack>
       <Text align="center" size={200}>{game.venue}</Text>
     </Stack>

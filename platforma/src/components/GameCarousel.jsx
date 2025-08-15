@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Stack, IconButton } from '@fluentui/react';
 import { collection, getDocs, getDoc, orderBy, query } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import GameCard from './GameCard';
 import { db } from '../firebase';
 
@@ -11,6 +12,7 @@ export default function GameCarousel() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    const storage = getStorage();
     async function fetchGames() {
       const gamesRef = collection(db, 'games');
       const q = query(gamesRef, orderBy('date'));
@@ -24,12 +26,28 @@ export default function GameCarousel() {
             const teamASnap = await getDoc(gameData.teamA);
             if (teamASnap.exists()) {
               teamA = { id: teamASnap.id, ...teamASnap.data() };
+              if (teamA.logo) {
+                try {
+                  const logoRef = ref(storage, `gs://platforma3lk.firebasestorage.app/${teamA.logo}`);
+                  teamA.logoUrl = await getDownloadURL(logoRef);
+                } catch (e) {
+                  console.error('Failed to fetch team A logo', e);
+                }
+              }
             }
           }
           if (gameData.teamB) {
             const teamBSnap = await getDoc(gameData.teamB);
             if (teamBSnap.exists()) {
               teamB = { id: teamBSnap.id, ...teamBSnap.data() };
+              if (teamB.logo) {
+                try {
+                  const logoRef = ref(storage, `gs://platforma3lk.firebasestorage.app/${teamB.logo}`);
+                  teamB.logoUrl = await getDownloadURL(logoRef);
+                } catch (e) {
+                  console.error('Failed to fetch team B logo', e);
+                }
+              }
             }
           }
           return { id: d.id, ...gameData, teamA, teamB };
