@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Stack, IconButton } from '@fluentui/react';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, getDocs, getDoc, orderBy, query } from 'firebase/firestore';
 import GameCard from './GameCard';
 import { db } from '../firebase';
 
@@ -15,7 +15,26 @@ export default function GameCarousel() {
       const gamesRef = collection(db, 'games');
       const q = query(gamesRef, orderBy('date'));
       const snap = await getDocs(q);
-      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const data = await Promise.all(
+        snap.docs.map(async d => {
+          const gameData = d.data();
+          let teamA = {};
+          let teamB = {};
+          if (gameData.teamA) {
+            const teamASnap = await getDoc(gameData.teamA);
+            if (teamASnap.exists()) {
+              teamA = { id: teamASnap.id, ...teamASnap.data() };
+            }
+          }
+          if (gameData.teamB) {
+            const teamBSnap = await getDoc(gameData.teamB);
+            if (teamBSnap.exists()) {
+              teamB = { id: teamBSnap.id, ...teamBSnap.data() };
+            }
+          }
+          return { id: d.id, ...gameData, teamA, teamB };
+        })
+      );
       setGames(data);
 
       const now = new Date();
