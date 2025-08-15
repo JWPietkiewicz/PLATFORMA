@@ -1,5 +1,7 @@
 import PageLayout from '../components/PageLayout';
+import { useLanguage } from '../i18n';
 
 export default function League() {
-  return <PageLayout title="League" />;
+  const { t } = useLanguage();
+  return <PageLayout title={t('pages.league')} />;
 }

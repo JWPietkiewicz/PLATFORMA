@@ -1,5 +1,7 @@
 import PageLayout from '../components/PageLayout';
+import { useLanguage } from '../i18n';
 
 export default function Article() {
-  return <PageLayout title="Article" />;
+  const { t } = useLanguage();
+  return <PageLayout title={t('pages.article')} />;
 }

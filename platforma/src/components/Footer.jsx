@@ -1,6 +1,8 @@
 import { Text } from '@fluentui/react-components';
+import { useLanguage } from '../i18n';
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <div
       style={{
@@ -19,7 +21,7 @@ export default function Footer() {
         style={{ height: 40 }}
       />
       <Text style={{ color: 'var(--colorNeutralForeground1)' }} size={200}>
-        © 2023 Amateur Basketball League
+        {t('footer.copyright')}
       </Text>
     </div>
   );
