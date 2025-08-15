@@ -54,7 +54,7 @@ export default function Player() {
 
   return (
     <PageLayout title={player.name}>
-      {player.team && <p>Team: {player.team}</p>}
+      {player.team.name && <p>Team: {player.team}</p>}
       {player.position && <p>Position: {player.position}</p>}
       {player.number && <p>Number: {player.number}</p>}
       {player.birthDate && <p>Birth Date: {player.birthDate}</p>}
