@@ -57,6 +57,21 @@ export default function Player() {
       {player.team && <p>Team: {player.team}</p>}
       {player.position && <p>Position: {player.position}</p>}
       {player.number && <p>Number: {player.number}</p>}
+      {player.birthDate && <p>Birth Date: {player.birthDate}</p>}
+      {player.birthPlace && <p>Birth Place: {player.birthPlace}</p>}
+      {player.height && <p>Height: {player.height}</p>}
+      {player.weight && <p>Weight: {player.weight}</p>}
+      {player.previousTeams?.length > 0 && (
+        <div>
+          <p>Previous Teams:</p>
+          <ul>
+            {player.previousTeams.map((team) => (
+              <li key={team}>{team}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {player.bio && <p>{player.bio}</p>}
     </PageLayout>
   );
 }
