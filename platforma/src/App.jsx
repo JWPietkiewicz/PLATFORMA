@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import SponsorsBar from './components/SponsorsBar';
 import Home from './pages/Home';
 import Article from './pages/Article';
 import News from './pages/News';
@@ -50,7 +51,10 @@ export default function App() {
           <Route path="/bracket" element={<Bracket />} />
           <Route path="/calendar" element={<Calendar />} />
         </Routes>
-        <Footer />
+        <Stack tokens={{ childrenGap: 0 }}>
+          <SponsorsBar />
+          <Footer />
+        </Stack>
       </Stack>
     </FluentProvider>
   );
