@@ -9,29 +9,29 @@ const rounds = [
       {
         id: 1,
         sides: [
-          { team: 'ITAGO GDYNIA', score: 0 },
-          { team: 'OBROŃCY TYTUŁU', score: 1 },
+          { id: 'itago-gdynia', team: 'ITAGO GDYNIA', score: 0 },
+          { id: 'obroncy-tytulu', team: 'OBROŃCY TYTUŁU', score: 1 },
         ],
       },
       {
         id: 2,
         sides: [
-          { team: 'ZADYMIARZE', score: 0 },
-          { team: 'NIEOBLICZALNI', score: 1 },
+          { id: 'zadymiarze', team: 'ZADYMIARZE', score: 0 },
+          { id: 'nieobliczalni', team: 'NIEOBLICZALNI', score: 1 },
         ],
       },
       {
         id: 3,
         sides: [
-          { team: 'BBG', score: 0 },
-          { team: 'CZARNE KONIE', score: 1 },
+          { id: 'bbg', team: 'BBG', score: 0 },
+          { id: 'czarne-konie', team: 'CZARNE KONIE', score: 1 },
         ],
       },
       {
         id: 4,
         sides: [
-          { team: 'SKYHAWKS', score: 1 },
-          { team: 'ŻABIE KRUKI', score: 0 },
+          { id: 'skyhawks', team: 'SKYHAWKS', score: 1 },
+          { id: 'zabie-kruki', team: 'ŻABIE KRUKI', score: 0 },
         ],
       },
     ],
@@ -42,15 +42,15 @@ const rounds = [
       {
         id: 5,
         sides: [
-          { team: 'OBROŃCY TYTUŁU', score: 0 },
-          { team: 'NIEOBLICZALNI', score: 1 },
+          { id: 'obroncy-tytulu', team: 'OBROŃCY TYTUŁU', score: 0 },
+          { id: 'nieobliczalni', team: 'NIEOBLICZALNI', score: 1 },
         ],
       },
       {
         id: 6,
         sides: [
-          { team: 'CZARNE KONIE', score: 1 },
-          { team: 'SKYHAWKS', score: 0 },
+          { id: 'czarne-konie', team: 'CZARNE KONIE', score: 1 },
+          { id: 'skyhawks', team: 'SKYHAWKS', score: 0 },
         ],
       },
     ],
@@ -61,8 +61,8 @@ const rounds = [
       {
         id: 7,
         sides: [
-          { team: 'NIEOBLICZALNI', score: 1 },
-          { team: 'CZARNE KONIE', score: 0 },
+          { id: 'nieobliczalni', team: 'NIEOBLICZALNI', score: 1 },
+          { id: 'czarne-konie', team: 'CZARNE KONIE', score: 0 },
         ],
       },
     ],
@@ -73,8 +73,8 @@ const rounds = [
       {
         id: 8,
         sides: [
-          { team: 'OBROŃCY TYTUŁU', score: 1 },
-          { team: 'SKYHAWKS', score: 0 },
+          { id: 'obroncy-tytulu', team: 'OBROŃCY TYTUŁU', score: 1 },
+          { id: 'skyhawks', team: 'SKYHAWKS', score: 0 },
         ],
       },
     ],

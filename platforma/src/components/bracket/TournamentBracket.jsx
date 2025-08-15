@@ -107,7 +107,7 @@ function Match({
         const isWinner = winnerIndex === i;
         return (
           <div
-            key={i}
+            key={side.id ?? i}
             className={styles.team}
           >
             <Text weight={isWinner ? 'bold' : 'regular'}>{side.team}</Text>
