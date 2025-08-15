@@ -3,16 +3,18 @@ import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import PageLayout from '../components/PageLayout';
+import { useLanguage } from '../i18n';
 
 export default function Player() {
+  const { t } = useLanguage();
   const { playerId } = useParams();
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [errorKey, setErrorKey] = useState(null);
 
   useEffect(() => {
     if (!playerId) {
-      setError('No player specified');
+      setErrorKey('noPlayer');
       setLoading(false);
       return;
     }
@@ -22,14 +24,14 @@ export default function Player() {
         const snapshot = await getDoc(doc(db, 'players', playerId));
         if (snapshot.exists()) {
           setPlayer({ id: snapshot.id, ...snapshot.data() });
-          setError(null);
+          setErrorKey(null);
         } else {
-          setError('Player not found');
+          setErrorKey('notFound');
           setPlayer(null);
         }
       } catch (err) {
         console.error(err);
-        setError('Failed to load player');
+        setErrorKey('failed');
       } finally {
         setLoading(false);
       }
@@ -40,30 +42,30 @@ export default function Player() {
 
   if (loading)
     return (
-      <PageLayout title="Player">
-        <p>Loading player...</p>
+      <PageLayout title={t('pages.player')}>
+        <p>{t('player.loading')}</p>
       </PageLayout>
     );
-  if (error)
+  if (errorKey)
     return (
-      <PageLayout title="Player">
-        <p>{error}</p>
+      <PageLayout title={t('pages.player')}>
+        <p>{t(`player.${errorKey}`)}</p>
       </PageLayout>
     );
   if (!player) return null;
 
   return (
     <PageLayout title={player.name}>
-      {player.team.name && <p>Team: {player.team}</p>}
-      {player.position && <p>Position: {player.position}</p>}
-      {player.number && <p>Number: {player.number}</p>}
-      {player.birthDate && <p>Birth Date: {player.birthDate}</p>}
-      {player.birthPlace && <p>Birth Place: {player.birthPlace}</p>}
-      {player.height && <p>Height: {player.height}</p>}
-      {player.weight && <p>Weight: {player.weight}</p>}
+      {player.team?.name && <p>{t('player.team')}: {player.team.name}</p>}
+      {player.position && <p>{t('player.position')}: {player.position}</p>}
+      {player.number && <p>{t('player.number')}: {player.number}</p>}
+      {player.birthDate && <p>{t('player.birthDate')}: {player.birthDate}</p>}
+      {player.birthPlace && <p>{t('player.birthPlace')}: {player.birthPlace}</p>}
+      {player.height && <p>{t('player.height')}: {player.height}</p>}
+      {player.weight && <p>{t('player.weight')}: {player.weight}</p>}
       {player.previousTeams?.length > 0 && (
         <div>
-          <p>Previous Teams:</p>
+          <p>{t('player.previousTeams')}:</p>
           <ul>
             {player.previousTeams.map((team) => (
               <li key={team}>{team}</li>
