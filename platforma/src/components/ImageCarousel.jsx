@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { IconButton, Image, Stack } from '@fluentui/react';
 
 const images = [
-  'https://placehold.co/800x300?text=Slide+1',
-  'https://placehold.co/800x300?text=Slide+2',
-  'https://placehold.co/800x300?text=Slide+3',
+  'https://placehold.co/800x300?text=Sponsor+1',
+  'https://placehold.co/800x300?text=Sponsor+2',
+  'https://placehold.co/800x300?text=Sponsor+3',
 ];
 
 export default function ImageCarousel() {
