@@ -25,7 +25,7 @@ const useStyles = makeStyles({
     ...shorthands.padding(tokens.spacingVerticalM, tokens.spacingHorizontalM),
   },
   round: {
-    minWidth: '240px',
+    minWidth: '280px',
     display: 'grid',
     rowGap: tokens.spacingVerticalS,
   },
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
   },
   matchCard: {
     position: 'relative',
-    minWidth: '220px',
+    minWidth: '280px',
     height: '72px',
     display: 'grid',
     gridTemplateRows: '1fr 1fr',
@@ -105,7 +105,8 @@ const useStyles = makeStyles({
     width: '16px',
     height: '2px',
     transform: 'translateY(-50%)',
-    backgroundColor: 'var(--colorNeutralStroke2)',
+    backgroundColor: tokens.colorNeutralStroke1,
+    zIndex: 1,
   },
   connectorHorizontalLeft: {
     position: 'absolute',
@@ -114,19 +115,22 @@ const useStyles = makeStyles({
     width: '16px',
     height: '2px',
     transform: 'translateY(-50%)',
-    backgroundColor: 'var(--colorNeutralStroke2)',
+    backgroundColor: tokens.colorNeutralStroke1,
+    zIndex: 1,
   },
   connectorVerticalRight: {
     position: 'absolute',
     right: '-16px',
     width: '2px',
-    backgroundColor: 'var(--colorNeutralStroke2)',
+    backgroundColor: tokens.colorNeutralStroke1,
+    zIndex: 1,
   },
   connectorVerticalLeft: {
     position: 'absolute',
     left: '-16px',
     width: '2px',
-    backgroundColor: 'var(--colorNeutralStroke2)',
+    backgroundColor: tokens.colorNeutralStroke1,
+    zIndex: 1,
   },
   finalsBadge: {
     marginInlineStart: tokens.spacingHorizontalSNudge,
