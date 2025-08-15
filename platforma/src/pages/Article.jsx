@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Article() {
-  return <h1>Article</h1>;
+  return <PageLayout title="Article" />;
 }

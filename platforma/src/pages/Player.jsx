@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import PageLayout from '../components/PageLayout';
 
 export default function Player() {
   const { playerId } = useParams();
@@ -37,16 +38,25 @@ export default function Player() {
     fetchPlayer();
   }, [playerId]);
 
-  if (loading) return <p>Loading player...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading)
+    return (
+      <PageLayout title="Player">
+        <p>Loading player...</p>
+      </PageLayout>
+    );
+  if (error)
+    return (
+      <PageLayout title="Player">
+        <p>{error}</p>
+      </PageLayout>
+    );
   if (!player) return null;
 
   return (
-    <div>
-      <h1>{player.name}</h1>
+    <PageLayout title={player.name}>
       {player.team && <p>Team: {player.team}</p>}
       {player.position && <p>Position: {player.position}</p>}
       {player.number && <p>Number: {player.number}</p>}
-    </div>
+    </PageLayout>
   );
 }

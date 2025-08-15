@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Tournament() {
-  return <h1>Tournament</h1>;
+  return <PageLayout title="Tournament" />;
 }

@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Calendar() {
-  return <h1>Calendar</h1>;
+  return <PageLayout title="Calendar" />;
 }

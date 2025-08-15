@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Players() {
-  return <h1>Players</h1>;
+  return <PageLayout title="Players" />;
 }

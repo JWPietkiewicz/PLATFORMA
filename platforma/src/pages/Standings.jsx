@@ -1,3 +1,5 @@
+import PageLayout from '../components/PageLayout';
+
 export default function Standings() {
-  return <h1>Standings</h1>;
+  return <PageLayout title="Standings" />;
 }
