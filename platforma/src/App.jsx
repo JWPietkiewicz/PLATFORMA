@@ -18,6 +18,7 @@ import Players from './pages/Players';
 import Team from './pages/Team';
 import Teams from './pages/Teams';
 import Venue from './pages/Venue';
+import Venues from './pages/Venues';
 import Schedule from './pages/Schedule';
 import Standings from './pages/Standings';
 import Bracket from './pages/Bracket';
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/teams" element={<Teams />} />
           <Route path="/venue" element={<Venue />} />
+          <Route path="/venues" element={<Venues />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/standings" element={<Standings />} />
           <Route path="/bracket" element={<Bracket />} />
