@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Stack, IconButton } from '@fluentui/react';
+import { useEffect, useState } from 'react';
+import { Stack } from '@fluentui/react';
 
 const sponsors = [
   'DOMBI',
@@ -17,11 +17,19 @@ const sponsors = [
 
 export default function SponsorsBar() {
   const [index, setIndex] = useState(0);
-  const prev = () => setIndex((index - 1 + sponsors.length) % sponsors.length);
-  const next = () => setIndex((index + 1) % sponsors.length);
 
-  const sponsor = sponsors[index];
-  const imageUrl = `https://placehold.co/160x80?text=${encodeURIComponent(sponsor)}`;
+  useEffect(() => {
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % sponsors.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
+
+  const visible = Array.from({ length: 6 }, (_, i) => {
+    const sponsor = sponsors[(index + i) % sponsors.length];
+    const imageUrl = `https://placehold.co/160x80?text=${encodeURIComponent(sponsor)}`;
+    return <img key={sponsor} src={imageUrl} alt={sponsor} style={{ height: 80 }} />;
+  });
 
   return (
     <div
@@ -34,9 +42,7 @@ export default function SponsorsBar() {
       }}
     >
       <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 8 }}>
-        <IconButton iconProps={{ iconName: 'ChevronLeft' }} ariaLabel="Previous sponsor" onClick={prev} />
-        <img src={imageUrl} alt={sponsor} style={{ height: 80 }} />
-        <IconButton iconProps={{ iconName: 'ChevronRight' }} ariaLabel="Next sponsor" onClick={next} />
+        {visible}
       </Stack>
     </div>
   );

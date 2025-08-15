@@ -51,8 +51,10 @@ export default function App() {
           <Route path="/bracket" element={<Bracket />} />
           <Route path="/calendar" element={<Calendar />} />
         </Routes>
-        <SponsorsBar />
-        <Footer />
+        <Stack tokens={{ childrenGap: 0 }}>
+          <SponsorsBar />
+          <Footer />
+        </Stack>
       </Stack>
     </FluentProvider>
   );
