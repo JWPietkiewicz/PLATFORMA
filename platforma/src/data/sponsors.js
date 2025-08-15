@@ -1,0 +1,15 @@
+const sponsors = [
+  'DOMBI',
+  'METALZBYT',
+  'TREFL SOPOT',
+  'KLIMAZBYT HURTOWNIA BRANŻOWA',
+  'USZYTE',
+  'KINGUIN ESPORTS LOUNGE',
+  'ARKA GDYNIA',
+  'HEMPATIA',
+  'POLITECHNIKA GDAŃSKA',
+  'KOCHAMY AKTYWNOŚĆ',
+  'SKLEP KOSZYKARZA',
+];
+
+export default sponsors;
