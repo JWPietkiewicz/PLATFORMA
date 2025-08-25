@@ -13,7 +13,7 @@ const navItems = [
   { key: 'players', text: 'Players', to: '/players' },
   { key: 'team', text: 'Team', to: '/team' },
   { key: 'teams', text: 'Teams', to: '/teams' },
-  { key: 'venue', text: 'Venue', to: '/venue' },
+  { key: 'venues', text: 'Venues', to: '/venues' },
   { key: 'schedule', text: 'Schedule', to: '/schedule' },
   { key: 'standings', text: 'Standings', to: '/standings' },
   { key: 'bracket', text: 'Bracket', to: '/bracket' },
